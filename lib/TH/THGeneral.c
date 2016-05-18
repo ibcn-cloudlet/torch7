@@ -22,8 +22,8 @@ static void defaultTorchErrorHandlerFunction(const char *msg, void *data)
   exit(-1);
 }
 
-static __thread void (*torchErrorHandlerFunction)(const char *msg, void *data) = defaultTorchErrorHandlerFunction;
-static __thread void *torchErrorHandlerData;
+static void (*torchErrorHandlerFunction)(const char *msg, void *data) = defaultTorchErrorHandlerFunction;
+static void *torchErrorHandlerData;
 
 void _THError(const char *file, const int line, const char *fmt, ...)
 {

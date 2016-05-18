@@ -103,12 +103,12 @@ void THSetArgErrorHandler( void (*torchArgErrorHandlerFunction_)(int argNumber, 
   torchArgErrorHandlerData = data;
 }
 
-static __thread void (*torchGCFunction)(void *data) = NULL;
-static __thread void *torchGCData;
+static void (*torchGCFunction)(void *data) = NULL;
+static void *torchGCData;
 static long heapSize = 0;
-static __thread long heapDelta = 0;
+static long heapDelta = 0;
 static const long heapMaxDelta = 1e6; // limit to +/- 1MB before updating heapSize
-static __thread long heapSoftmax = 3e8; // 300MB, adjusted upward dynamically
+static long heapSoftmax = 3e8; // 300MB, adjusted upward dynamically
 static const double heapSoftmaxGrowthThresh = 0.8; // grow softmax if >80% max after GC
 static const double heapSoftmaxGrowthFactor = 1.4; // grow softmax by 40%
 

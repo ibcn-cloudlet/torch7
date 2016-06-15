@@ -71,8 +71,8 @@ static void defaultTorchArgErrorHandlerFunction(int argNumber, const char *msg, 
   exit(-1);
 }
 
-static __thread void (*torchArgErrorHandlerFunction)(int argNumber, const char *msg, void *data) = defaultTorchArgErrorHandlerFunction;
-static __thread void *torchArgErrorHandlerData;
+static void (*torchArgErrorHandlerFunction)(int argNumber, const char *msg, void *data) = defaultTorchArgErrorHandlerFunction;
+static void *torchArgErrorHandlerData;
 
 void _THArgCheck(const char *file, int line, int condition, int argNumber, const char *fmt, ...)
 {

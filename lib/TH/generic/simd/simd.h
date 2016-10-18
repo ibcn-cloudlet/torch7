@@ -55,7 +55,8 @@ static inline uint32_t detectHostSIMDExtensions()
   return SIMDExtension_NEON;
 }
 
-#else // x86
+#elif defined(USE_SSE2) || defined(USE_SSE3) || defined(USE_SSSE3) \
+        || defined(USE_SSE4_1) || defined(USE_SSE4_2) // x86
 
 static inline void cpuid(uint32_t *eax, uint32_t *ebx, uint32_t *ecx, uint32_t *edx)
 {

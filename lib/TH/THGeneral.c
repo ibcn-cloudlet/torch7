@@ -127,6 +127,8 @@ void THSetDefaultArgErrorHandler(THArgErrorHandlerFunction new_handler, void *da
   defaultArgErrorHandlerData = data;
 }
 
+static void (*defaultTorchGCFunction)(void *data) = NULL;
+static void *defaultTorchGCData;
 static __thread void (*torchGCFunction)(void *data) = NULL;
 static __thread void *torchGCData;
 static ptrdiff_t heapSize = 0;
@@ -151,6 +153,12 @@ void THSetGCHandler( void (*torchGCFunction_)(void *data), void *data )
 {
   torchGCFunction = torchGCFunction_;
   torchGCData = data;
+}
+
+void THSetDefaultGCHandler( void (*torchGCFunction_)(void *data), void *data )
+{
+  defaultTorchGCFunction = torchGCFunction_;
+  defaultTorchGCData = data;
 }
 
 /* it is guaranteed the allocated size is not bigger than PTRDIFF_MAX */
@@ -184,8 +192,13 @@ static ptrdiff_t applyHeapDelta() {
  *     soft max by 40%
  */
 static void maybeTriggerGC(ptrdiff_t curHeapSize) {
-  if (torchGCFunction && curHeapSize > heapSoftmax) {
-    torchGCFunction(torchGCData);
+  if ((defaultTorchGCFunction || torchGCFunction) && curHeapSize > heapSoftmax) {
+	  if(torchGCFunction)
+		  torchGCFunction(torchGCData);
+
+	  if(defaultTorchGCFunction)
+		  defaultTorchGCFunction(defaultTorchGCData);
+
 
     // ensure heapSize is accurate before updating heapSoftmax
     ptrdiff_t newHeapSize = applyHeapDelta();
